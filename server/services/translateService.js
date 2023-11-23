@@ -118,7 +118,7 @@ module.exports = ({ strapi }) => ({
     try {
       const translatedData = {};
 
-      for (let fieldName in dataToTranslate) {
+      for (let fieldName in _.omit(dataToTranslate, ["exportID"])) {
         const checkData = dataToTranslate[fieldName];
 
         if (!checkData) {
@@ -144,6 +144,10 @@ module.exports = ({ strapi }) => ({
       }
       translatedData.locale = targetLocale;
       translatedData.publishedAt = new Date().toISOString();
+
+      if(dataToTranslate.hasOwnProperty('exportID')) {
+        translatedData.exportID = dataToTranslate.exportID + '-' + targetLocale;
+      }
 
       return translatedData;
     } catch (error) {
